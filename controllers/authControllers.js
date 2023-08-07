@@ -14,13 +14,13 @@ module.exports = {
                 where: { username: username }
             });
 
-            if (!checkLogin) throw { message: "User not Found." }
-            if (checkLogin.isSuspended == true) throw { message: "You are Suspended." }
-            if (!checkLogin.isAdmin == false) throw { message: "You have to Login on Admin Login." }
+            if (!checkLogin) throw { message: "User not Found." };
+            if (checkLogin.isSuspended == true) throw { message: "You are Suspended." };
+            if (!checkLogin.isAdmin == false) throw { message: "As a HRGA admin, you have to login on the admin tab." };
 
             const isValid = await bcrypt.compare(password, checkLogin.password);
 
-            if (!isValid) throw { message: "Username or Password Incorrect." };
+            if (!isValid) throw { message: "Username or password is incorrect." };
 
             const payload = { id: checkLogin.id, isAdmin: checkLogin.isAdmin };
             const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: "3h" });
@@ -46,12 +46,12 @@ module.exports = {
             });
 
             if (!checkLogin) throw { message: "User not Found." }
-            if (checkLogin.isSuspended == true) throw { message: "You are Suspended." }
-            if (checkLogin.isAdmin == false) throw { message: "You have to Login on Cashier Login." }
+            if (checkLogin.isSuspended == true) throw { message: "You are suspended." }
+            if (checkLogin.isAdmin == false) throw { message: "You are not an admin. You have to login on the employee tab." }
 
             const isValid = await bcrypt.compare(password, checkLogin.password);
 
-            if (!isValid) throw { message: "Username or Password Incorrect." };
+            if (!isValid) throw { message: "Username or password is incorrect." };
 
             const payload = { id: checkLogin.id, isAdmin: checkLogin.isAdmin };
             const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: "3h" });
@@ -90,16 +90,16 @@ module.exports = {
             const { email } = req.body;
             const findUser = await users.findOne({ where: { email: email } });
             if (!findUser) throw { message: "E-mail not found." }
-            const data = await fs.readFileSync("./reset_password_template.html", "utf-8");
-            const tempCompile = await handlebars.compile(data);
+            const data = fs.readFileSync("./reset_password_template.html", "utf-8");
+            const tempCompile = handlebars.compile(data);
             const tempResult = tempCompile(data);
             const payload = { id: findUser.id }
             const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: "4h" });
             const htmlWithToken = tempResult.replace('TOKEN_PLACEHOLDER', token);
             await transporter.sendMail({
-                from: "aryobimoalvian@gmail.com",
+                from: "asc33nzio.dev@gmail.com",
                 to: email,
-                subject: "Reset Your Cashierkeun Account Password.",
+                subject: "Reset Your SCP AMS Account Password.",
                 html: htmlWithToken
             });
             res.status(200).send(token);
@@ -114,14 +114,14 @@ module.exports = {
     resetPassword: async (req, res) => {
         try {
             const { newPassword, confirmPassword } = req.body;
-            if (newPassword !== confirmPassword) throw { message: "Password is not same" }
+            if (newPassword !== confirmPassword) throw { message: "Password does not match." }
             const salt = await bcrypt.genSalt(10);
             const hashPassword = await bcrypt.hash(confirmPassword, salt);
             const result = await users.update(
                 { password: hashPassword },
                 { where: { id: req.user.id } }
             );
-            res.status(200).send({ message: "Password has been changed" });
+            res.status(200).send({ message: "Password has been changed." });
         } catch (error) {
             res.status(400).send(error);
         }

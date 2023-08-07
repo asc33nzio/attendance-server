@@ -10,6 +10,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        firstName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        lastName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        birthDate: {
+            type: DataTypes.DATE,
+            allowNull: false
+        },
         email: {
             type: DataTypes.STRING,
             allowNull: false
@@ -18,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        position: {
+        role: {
             type: DataTypes.STRING,
             defaultValue: "employee"
         },

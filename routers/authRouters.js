@@ -4,8 +4,8 @@ const { verifyToken } = require("../middleware/auth");
 const { multerUpload } = require('../middleware/multer');
 const { checkPassword } = require("../middleware/validator");
 
-router.post("/cashierlogin", authControllers.employeeLogin);
-router.post("/adminlogin", authControllers.adminLogin);
+router.post("/admin", authControllers.adminLogin);
+router.post("/employee", authControllers.employeeLogin);
 router.get("/keeplogin", verifyToken, authControllers.keepLogin);
 router.put("/forget", authControllers.forgetPassword);
 router.patch("/resetpassword",checkPassword, verifyToken, authControllers.resetPassword);
