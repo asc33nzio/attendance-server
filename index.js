@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const db = require('./models');
-const { adminRouters, authRouters } = require("./routers");
+const { adminRouters, authRouters, attendanceRouters } = require("./routers");
 const PORT = process.env.PORT || 8000;
 const server = express();
 
@@ -24,6 +24,7 @@ server.use(express.static('./public'));
 // ===========================
 server.use('/api/users', authRouters);
 server.use('/api/admin', adminRouters);
+server.use('/api/attendance', attendanceRouters);
 
 
 server.get("/api", (req, res) => {
