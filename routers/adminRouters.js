@@ -12,5 +12,6 @@ router.get("/detail/:id", adminControllers.getEmployeeById);
 router.patch("/:id", verifyToken, checkRole, multerUpload(`./public/avatars`, 'Avatar').single('avatar'), adminControllers.updateEmployeeData);
 router.patch('/suspend/:id', verifyToken, checkRole, adminControllers.suspendEmployee);
 router.delete('/:id', verifyToken, checkRole, adminControllers.deleteEmployee);
+router.patch('/salary/:role', verifyToken, checkRole, adminControllers.editSalary);
 
 module.exports = router;

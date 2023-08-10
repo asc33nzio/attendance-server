@@ -330,4 +330,39 @@ module.exports = {
             res.status(200).send(error)
         }
     },
+    editSalary: async (req, res) => {
+        try {
+            const { role } = req.params;
+            if (!role || role === null) {
+                return res.status(404).send({
+                    status: 404,
+                    message: "You must input a role."
+                });
+            };
+
+            const result = await salaries.findOne({ where: { name: role } });
+            if (!result) {
+                return res.status(404).send({
+                    status: 404,
+                    message: "Salary not found."
+                });
+            };
+
+            const newAmount = req.body.amount;
+            await result.update({
+                amount: newAmount
+            });
+
+            res.status(200).send({
+                status: 200,
+                message: "Salary updated successfully."
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(400).send({
+                status: 400,
+                message: "Internal server error."
+            });
+        }
+    },
 };
